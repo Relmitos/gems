@@ -7,15 +7,15 @@
         
         
         
-        <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>Test Driven Development (TDD) - Gems</title>
-        <link href="../../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Unpacking a Python sequence into variables - Gems</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
 
-        <script src="../../js/jquery-1.10.2.min.js" defer></script>
-        <script src="../../js/bootstrap.min.js" defer></script>
+        <script src="../../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../../js/bootstrap.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
@@ -23,7 +23,7 @@
     <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="../..">Gems</a>
+                <a class="navbar-brand" href="../../..">Gems</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
@@ -34,27 +34,27 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="navitem">
-                                <a href="../.." class="nav-link">Home</a>
+                                <a href="../../.." class="nav-link">Home</a>
                             </li>
-                            <li class="dropdown active">
+                            <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Python <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="./" class="dropdown-item active">Test Driven Development (TDD)</a>
+    <a href="../../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
 </li>
                                     
 <li>
-    <a href="../tricks/" class="dropdown-item">Tricks</a>
+    <a href="../" class="dropdown-item">Tricks</a>
 </li>
                                     
 <li>
-    <a href="../misc/" class="dropdown-item">Misc Python Topics</a>
+    <a href="../../misc/" class="dropdown-item">Misc Python Topics</a>
 </li>
                                 </ul>
                             </li>
                             <li class="navitem">
-                                <a href="../../blog/" class="nav-link">Blog</a>
+                                <a href="../../../blog/" class="nav-link">Blog</a>
                             </li>
                         </ul>
 
@@ -64,16 +64,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../.." class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" href="../tricks/" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -92,8 +82,20 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#python-test-driven-developmen" class="nav-link">Python Test Driven Developmen</a>
+            <li class="nav-item" data-level="1"><a href="#unpacking-a-python-sequence-into-variables" class="nav-link">Unpacking a Python sequence into variables</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#problem" class="nav-link">Problem</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#solution" class="nav-link">Solution</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#discussion" class="nav-link">Discussion</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -101,17 +103,46 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="python-test-driven-developmen">Python Test Driven Developmen</h1>
-<ul>
-<li>
-<p><a href="python-unittest-assert-custom-objects-are-equal/">Assert custom objects are equal in Python unit test</a>
-  <em>on August 15th, 2020, in <a href="../">Python</a> :: <a href="./">Test Driven Development</a></em></p>
-</li>
-<li>
-<p><a href="python-unittest-database-applications/">Unit testing for Python database applications</a> 
-  <em>on August 14th, 2020, in <a href="../">Python</a> :: <a href="./">Test Driven Development</a></em></p>
-</li>
-</ul></div>
+<h1 id="unpacking-a-python-sequence-into-variables">Unpacking a Python sequence into variables</h1>
+<h2 id="problem">Problem</h2>
+<p>You have a list, tuple or another sequence that you want to unpack into a collection of variables.</p>
+<h2 id="solution">Solution</h2>
+<p>You use assignment operator. On the left side of the operator you define a tuple with the variables. On the right side of the operator is the sequence. The only requirement is that the number of variables and structures match the sequence.</p>
+<p>Example:</p>
+<pre><code class="python">&gt;&gt;&gt; p = (5, 6)
+&gt;&gt;&gt; x, y = p
+&gt;&gt;&gt; x
+5
+&gt;&gt;&gt; y
+6
+
+</code></pre>
+
+<p>Elements of the sequence could be any objects - integer, sequence, etc. Here is an example:</p>
+<pre><code class="python">&gt;&gt;&gt; data = [ 'ACME', 50, 91.1, (2012, 12, 21)]
+&gt;&gt;&gt; name, shares, price, date = data
+&gt;&gt;&gt; name
+'ACME'
+&gt;&gt;&gt; shares
+50
+&gt;&gt;&gt; price
+91.1
+&gt;&gt;&gt; date
+(2012, 12, 21)
+
+</code></pre>
+
+<h2 id="discussion">Discussion</h2>
+<p>In fact unpacking works with any iterable Python object. This includes strings, files, iterators, and generators.</p>
+<p>Sometimes in your assignment, you want to ignore some of the values at certain places from the sequence. Python doesn't have a special syntax for this. Common practice is to use special variable name, e.g. underscore <code>_</code>, for places you want to ignore.</p>
+<pre><code class="python">&gt;&gt;&gt; data = [ 'ACME', 50, 91.1, (2012, 12, 21)]
+&gt;&gt;&gt; name, _, _, date = data
+&gt;&gt;&gt; name
+'ACME'
+&gt;&gt;&gt; date
+(2012, 12, 21)
+
+</code></pre></div>
             </div>
         </div>
 
@@ -120,11 +151,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = "../..",
+            var base_url = "../../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="../../js/base.js" defer></script>
-        <script src="../../search/main.js" defer></script>
+        <script src="../../../js/base.js" defer></script>
+        <script src="../../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
