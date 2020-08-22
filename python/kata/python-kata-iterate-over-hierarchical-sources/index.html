@@ -8,7 +8,7 @@
         
         
         <link rel="shortcut icon" href="../../../img/favicon.ico">
-        <title>Assert custom objects are equal in Python unit test - Gems</title>
+        <title>Iterate over hierarchical sources in Python - Gems</title>
         <link href="../../../css/bootstrap.min.css" rel="stylesheet">
         <link href="../../../css/font-awesome.min.css" rel="stylesheet">
         <link href="../../../css/base.css" rel="stylesheet">
@@ -41,11 +41,11 @@
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../" class="dropdown-item">Test Driven Development (TDD)</a>
+    <a href="../../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
 </li>
                                     
 <li>
-    <a href="../../kata/" class="dropdown-item">Kata</a>
+    <a href="../" class="dropdown-item">Kata</a>
 </li>
                                     
 <li>
@@ -86,17 +86,17 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#assert-custom-objects-are-equal-in-python-unit-test" class="nav-link">Assert custom objects are equal in Python unit test</a>
+            <li class="nav-item" data-level="1"><a href="#iterate-over-hierarchical-sources-in-python" class="nav-link">Iterate over hierarchical sources in Python</a>
               <ul class="nav flex-column">
             <li class="nav-item" data-level="2"><a href="#problem" class="nav-link">Problem</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#solution" class="nav-link">Solution</a>
+            <li class="nav-item" data-level="2"><a href="#discussion" class="nav-link">Discussion</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#discussion" class="nav-link">Discussion</a>
+            <li class="nav-item" data-level="2"><a href="#solution" class="nav-link">Solution</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -107,150 +107,174 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="assert-custom-objects-are-equal-in-python-unit-test">Assert custom objects are equal in Python unit test</h1>
+<h1 id="iterate-over-hierarchical-sources-in-python">Iterate over hierarchical sources in Python</h1>
 <h2 id="problem">Problem</h2>
-<p>You are creating a Python unit test, using <code>unittest</code>. Your test needs to assert that two custom objects are equal. For example, you might have following <code>User</code> class defined:</p>
-<pre><code class="python">class User:
-    id: int
-    name: str
-
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
+<p>We are given a list of files and we need to insert the words from files into a database. The sequence of the words should be preserved. </p>
+<p>Here is one way to achieve this:</p>
+<pre><code class="python">file_list = ['a.txt', 'b.txt']
+for file_name in file_list:
+    with open(file_name, 'r') as file:
+        for line in file:
+            for word in line.split(' '):
+                with db.connection.cursor() as cursor:
+                    cursor.execute('INSERT INTO words(word) VALUES (?)', (word,))
+                    cursor.commit()
 </code></pre>
 
-<p>Trying to compare two <code>User</code> objects for equality, using <code>assertEqual</code> fails:</p>
-<pre><code>&gt;&gt;&gt; import unittest
-&gt;&gt;&gt; test_case = unittest.TestCase()
-&gt;&gt;&gt; expected = User(1, 'John')
-&gt;&gt;&gt; actual = User(1, 'John')
-test_case.assertEqual(expected, actual)
-Traceback (most recent call last):
-...
-AssertionError: &lt;__main__.User object at 0x000002BC202AD888&gt; != &lt;__main__.User object at 0x000002BC2000B348&gt;
-&gt;&gt;&gt;
-</code></pre>
-
-<h2 id="solution">Solution</h2>
-<p>I will present you 3 different solutions to the problem.</p>
-<ul>
-<li>Implement equality interface</li>
-<li>Use <code>addTypeEqualityFunc</code></li>
-<li>Use matcher</li>
-</ul>
-<p>Each solution is applicable to different situations.</p>
-<h3 id="implement-equality-interface">Implement equality interface</h3>
-<p>Because <code>unittest</code>  will try to perform Python's equality operator on your <code>User</code> objects, if the <code>User</code> class implements the equality operator interface, the equality assertion will work. The equality operator interface requires that the class implements a <code>__eq__</code> method.</p>
-<pre><code class="python">class User:
-    id: int
-    name: str
-
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
-
-    def __eq__(self, other):
-        return self.id == other.id and \
-               self.name == other.name
-</code></pre>
-
-<p>Now it is ok to use <code>assertEqual</code> :</p>
-<pre><code>&gt;&gt;&gt; import unittest
-&gt;&gt;&gt; test_case = unittest.TestCase()
-&gt;&gt;&gt; expected = User(1, 'John')
-&gt;&gt;&gt; actual = User(1, 'John')
-&gt;&gt;&gt; test_case.assertEqual(expected, actual)
-</code></pre>
-
-<p><code>assertNotEqual</code> also works fine:</p>
-<pre><code>&gt;&gt;&gt; import unittest
-&gt;&gt;&gt; test_case = unittest.TestCase()
-&gt;&gt;&gt; expected = User(1, 'John')
-&gt;&gt;&gt; actual = User(1, 'Jane')
-&gt;&gt;&gt; test_case.assertNotEqual(expected, actual)
-</code></pre>
-
-<p>Using this approach solves our problem, but it has some limitations:</p>
-<ul>
-<li>We need to modify the User class source</li>
-<li>There is no way to have different equality assertions for different situations. For example, we might have situations where equality doesn't include the <code>id</code> attribute.</li>
-</ul>
-<h3 id="use-addtypeequalityfunc-method">Use <code>addTypeEqualityFunc</code> method</h3>
-<p>Unittest <code>TestCase</code> class provides convenient way to override default Python equality operator by using the <code>addTypeEqualityFunc</code>:</p>
-<pre><code>&gt;&gt;&gt; import unittest
-&gt;&gt;&gt; test_case = unittest.TestCase()
-&gt;&gt;&gt; test_case.addTypeEqualityFunc(User, lambda first, second, msg: first.name == second.name )
-&gt;&gt;&gt; expected = User(1, 'John')
-actual = User(2, 'John')
-&gt;&gt;&gt; test_case.assertEqual(expected, actual)
-</code></pre>
-
-<p>The limitations of this approach:</p>
-<ul>
-<li>We have to use the same comparison function for a given type in all tests. For example, we might have tests where equality check requires <code>id</code> fields to be equal and other tests where <code>id</code> fields should not be compared.</li>
-<li>Both parameters to <code>assertEqual</code> have to be objects of the same type.</li>
-</ul>
-<h3 id="use-matcher">Use matcher</h3>
-<p>Another approach would be to create custom matcher object. </p>
-<pre><code class="python">class UserMatcher:
-    expected: User
-
-    def __init__(self, expected):
-        self.expected = expected
-
-    def __eq__(self, other):
-        return self.expected.id == other.id and \
-               self.expected.name == other.name
-</code></pre>
-
-<p>Custom matcher could be any class that implements the equality operator. In other words, having the <code>__eq__</code>  method implemented.</p>
-<pre><code>&gt;&gt;&gt; test_case = unittest.TestCase()
-&gt;&gt;&gt; expected = User(1, 'John')
-&gt;&gt;&gt; actual = User(1, 'John')
-&gt;&gt;&gt; test_case.assertEqual(UserMatcher(expected), actual)
-</code></pre>
-
-<p>Although this is the most flexible approach, it is more verbose.</p>
+<p>How do you test such code? Maybe you use something I call 'evolutionary testing' - you start with the outer loop. Add a print statement, run a few times, comment the print statement. And you continue until it is done.</p>
+<p>Ok. This might work at the beginning. But how you test your code continuously? There are situations where you need to verify the code is working correctly. For example:</p>
+<ol>
+<li>New requirements - e.g. process PDF, image files etc.</li>
+<li>Dependency upgrade - e.g. changing to a higher version of Python</li>
+<li>Change the target database</li>
+<li>Issue fixing</li>
+<li>Error handling</li>
+</ol>
+<p>This code is already difficult to read and understand.</p>
+<p>You want to improve your code - make it testable, more readable and maintainable, more flexible and extensible.</p>
 <h2 id="discussion">Discussion</h2>
-<p>In case of equality assertion fails, the output is not very useful:</p>
-<pre><code>&gt;&gt;&gt; test_case.assertEqual(UserMatcher(expected), actual)
-Traceback (most recent call last):
-...
-AssertionError: &lt;__main__.UserMatcher object at 0x000002BC20309BC8&gt; != &lt;__main__.User object at 0x000002BC20314388&gt;
+<p>Look at the code. Isn't it doing too much things? </p>
+<h2 id="solution">Solution</h2>
+<p>Let's start with the responsibilities. </p>
+<ul>
+<li>Iterate over a list of files</li>
+<li>Process a file - iterate over the lines from a file</li>
+<li>Get the lines from a file</li>
+<li>Process a line - iterate over the words in a line</li>
+<li>Get the words from a line</li>
+<li>Process a word - save a word into the database</li>
+</ul>
+<p>So we might come with an object-oriented solution like this:</p>
+<pre><code class="python">class WordLoader:
+
+    def _get_line_words(self, line):
+        return line.split(' ')
+
+    def _get_file_lines(file_name):
+        with open(file_name, 'r') as file:
+            return f
+
+    def _process_word(self, word):
+        with db.connection.cursor() as cursor:
+            cursor.execute('INSERT INTO words(word) VALUES (?)', (word,))
+            cursor.commit()        
+
+    def _process_line(self, line):
+        for word in self._get_line_words(line):
+            self._process_word(word)
+
+    def _process_file(self, file_name):
+        for line in self._get_file_lines(file_name):
+            self._process_line(line)
+
+    def __call__(self, file_list):
+        for file_name in file_list:
+            self._process_file(file_name)
 </code></pre>
 
-<p>You could improve this by implementing a <code>__repr__</code> method of your custom class:</p>
-<pre><code class="python">class User:
-    id: int
-    name: str
-
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
-
-    def __repr__(self):
-        return f&quot;User(id={repr(self.id)}, name={repr(self.name)})&quot;
+<p>Looks much better now. We can test each method in isolation with unit tests.</p>
+<p>However I still have some concerns.</p>
+<p>The <em>WordLoader</em> class we created takes too much responsibilities.</p>
+<p>What is going on is still not very visible. To understand what is going on, I need to dig into the whole chain of execution. Can I make my code more expressive so that I can read the code from the very beginning like this: "Insert all the words from a list of files into the database."  Maybe my main code could look like this?</p>
+<pre><code class="python">for word in words_from_files:
+    save_word(word)
 </code></pre>
 
-<p>In case you are using matcher, the matcher should also implement the <code>__repr__</code> method:</p>
-<pre><code class="python">class UserMatcher:
-    expected: User
-
-    def __init__(self, expected):
-        self.expected = expected
-
-    def __repr__(self):
-        return repr(self.expected)
-
-    def __eq__(self, other):
-        return self.expected.id == other.id and \
-               self.expected.name == other.name
+<p>Where the <code>words_from_files</code>  comes from?</p>
+<pre><code class="python">files = get_files_from_name_list(file_list)
+lines_from_files = get_lines_from_files(files)
+words_from_files = get_words_from_lines(lines_from_files)
 </code></pre>
 
-<p>Now we will get much more readable and meaningful assertion failure message:</p>
-<pre><code>&gt;&gt;&gt; test_case.assertEqual(UserMatcher(expected), actual)
-...
-AssertionError: User(id=1, name='John') != User(id=2, name='John')
+<p>Wait! You are going to load all these terabytes and petabytes into the memory?</p>
+<p>Good point. Not necessarily. Instead of returning list, I could use generators.</p>
+<pre><code class="python">def get_files_from_name_list(filename_list):
+    for filename in filename_list:
+        with open(filename, 'r') as file:
+            yield file
+
+def get_lines_from_files(files):
+    for file in files:
+        for line in file:
+            yield file
+
+def get_words_from_lines(lines):
+    for line in lines:
+        for word in line.split(' ')
+            yield word
+</code></pre>
+
+<p>The code is much more expressive now. There are two things I do not like:</p>
+<ul>
+<li>functions look almost the same</li>
+<li>functions are doing more than one thing. Let's take <code>get_lines_from_files</code> as an example. It iterates over the files in a list, unpacks the file into lines, using <code>split()</code> method and iterates over the resulting words.  </li>
+</ul>
+<pre><code class="python">def unpack_containers(containers, unpack):
+    for container in containers:
+        for item in unpack(container):
+            yield item
+</code></pre>
+
+<pre><code class="python">def unpack_filename(filename):
+    with open(filename, 'r') as f:
+        yield [f]
+
+def unpack_file_lines(file):
+    return file
+
+def unpack_line_words(line):
+    for word in line.split(' '):
+        yeild word
+
+files = unpack_containers(file_list, lambda filename: [open(filename, 'r')])
+lines_from_files = get_lines_from_files(files)
+words_from_files = get_words_from_lines(lines_from_files)
+</code></pre>
+
+<pre><code class="python">files = map(open_file, file_list)
+lines = chain.from_iterable(files)
+words = chain.from_iterable(map(lambda line: line.split(' '), lines))
+
+</code></pre>
+
+<pre><code class="python">def open_file(filename):
+    with open(filename, 'r') as f:
+        yield f
+
+def get_words_from_line(line):
+    return line.split(' ')
+
+def flat_map(function, iterable, *arg):
+    arg.insert(0, iterable)
+    chain.from_iterable(map(function, *arg))
+
+lines = map(open_file, file_list)
+words = flat_map(get_words_from_line, lines)
+</code></pre>
+
+<pre><code class="python">def list_new_events():
+    with db.cursor() as c:
+        c.execute(&quot;SELECT * FROM events WHERE status='N'&quot;)
+        yield c.fetchall()
+
+def repeat(function, before=None, after=None):
+    while True:
+        if before is not None:
+            before()
+        yield function()
+        if after is not None:
+            after()
+
+def reset_process():
+    pass
+
+def process(event):
+    pass
+
+event_stream = chain.from_iterable(repeat, after=reset_process)
+for event in event_stream:
+    process(event)
+
 </code></pre></div>
             </div>
         </div>

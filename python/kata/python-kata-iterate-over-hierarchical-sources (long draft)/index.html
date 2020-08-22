@@ -7,15 +7,15 @@
         
         
         
-        <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>Misc Python Topics - Gems</title>
-        <link href="../../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Iterate over hierarchical sources in Python - Gems</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
 
-        <script src="../../js/jquery-1.10.2.min.js" defer></script>
-        <script src="../../js/bootstrap.min.js" defer></script>
+        <script src="../../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../../js/bootstrap.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
@@ -23,7 +23,7 @@
     <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="../..">Gems</a>
+                <a class="navbar-brand" href="../../..">Gems</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
@@ -34,31 +34,31 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="navitem">
-                                <a href="../.." class="nav-link">Home</a>
+                                <a href="../../.." class="nav-link">Home</a>
                             </li>
-                            <li class="dropdown active">
+                            <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Python <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
+    <a href="../../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
 </li>
                                     
 <li>
-    <a href="../kata/" class="dropdown-item">Kata</a>
+    <a href="../" class="dropdown-item">Kata</a>
 </li>
                                     
 <li>
-    <a href="../tricks/" class="dropdown-item">Tricks</a>
+    <a href="../../tricks/" class="dropdown-item">Tricks</a>
 </li>
                                     
 <li>
-    <a href="./" class="dropdown-item active">Misc Python Topics</a>
+    <a href="../../misc/" class="dropdown-item">Misc Python Topics</a>
 </li>
                                 </ul>
                             </li>
                             <li class="navitem">
-                                <a href="../../blog/" class="nav-link">Blog</a>
+                                <a href="../../../blog/" class="nav-link">Blog</a>
                             </li>
                         </ul>
 
@@ -68,16 +68,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../tricks/" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" href="../../blog/" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -96,8 +86,16 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#misc-python-topics" class="nav-link">Misc Python Topics</a>
+            <li class="nav-item" data-level="1"><a href="#iterate-over-hierarchical-sources-in-python" class="nav-link">Iterate over hierarchical sources in Python</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#problem" class="nav-link">Problem</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#solution" class="nav-link">Solution</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -105,11 +103,69 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="misc-python-topics">Misc Python Topics</h1>
-<ul>
-<li><a href="python-pyodbc-truncate-table/">Truncate table with pyodbc</a>
-  <em>on August 17th, 2020, in <a href="../">Python</a> :: <a href="./">Misc Topics</a></em></li>
-</ul></div>
+<h1 id="iterate-over-hierarchical-sources-in-python">Iterate over hierarchical sources in Python</h1>
+<h2 id="problem">Problem</h2>
+<h3 id="scenario">Scenario</h3>
+<p>We are given a list of files and we need to insert the words from files into a database. The sequence of the words should be preserved. </p>
+<p>Here is one way to achieve this:</p>
+<pre><code class="python">file_list = ['a.txt', 'b.txt']
+for file_name in file_list:
+    with open(file_name, 'r') as file:
+        for line in file.readline():
+            for word in line.split(' '):
+                with db.connection.cursor() as cursor:
+                    cursor.execute('INSERT INTO words(word) VALUES (?)', (word,))
+                    cursor.commit()
+</code></pre>
+
+<p>Wow. Not very easy to read already, but it serves the purpose.</p>
+<p>How about testing? You think - it is pretty straightforward. <em>"I did couple of exploration tests during development. I am pretty confident it works!"</em> Well ... wait to see what comes next. </p>
+<p><strong>Day 1.</strong> New requirements:</p>
+<ol>
+<li>Stop words should be inserted into a table <code>stop_words</code>. Rest of the words are still going into the <code>words</code> table.</li>
+</ol>
+<p><strong>Day 2.</strong> New requirements:</p>
+<ol>
+<li>Our database administrator has some concerns about the performance and wants that the commit statement happens after 1000 words has been inserted into each table. This means you keep track on number of inserted words in each table separately. When any of the table reaches 1000 you commit inserts for that table and reset the counter for that table.</li>
+</ol>
+<p><strong>Day 3.</strong> </p>
+<ol>
+<li>New requirement: We should be able to extract words from Word files.</li>
+<li>Bug: words are not split on punctuation.</li>
+<li>Bug: multiple spaces cause empty words to be inserted.</li>
+<li>New requirement: words need to be stored in lower case.</li>
+</ol>
+<p><strong>Week 5.</strong> You worked very hard, but you are still unable to finish the Word files processing. Your manager asks you to deliver without this feature. She also assigns three new developers to your project as new requirements arrive.</p>
+<ol>
+<li>You need to be able to process PDF files</li>
+</ol>
+<p><strong>Week 25.</strong> Everything works more or less fine. Now the privacy team comes into the picture.</p>
+<ol>
+<li>Only approved files should be processed. You receive a list of approved files in a CSV file.</li>
+<li>You need to be able to OCR images</li>
+<li>You need to create a build pipeline for continuous integration</li>
+<li>The solution needs to implement unit tests with at least 70% coverage. Unit tests should be executed at build time.</li>
+</ol>
+<p><strong>Year 1.</strong></p>
+<ol>
+<li>Privacy team has provided REST API to validate the file eligibility for processing. Can you remember how the whole this hell thing works?</li>
+<li>Real-time processing! List of files is stored in a database table. It is updated constantly. Our solution needs to process each new file entry as soon as possible.</li>
+<li>We want that words are inserted not only into the database, but also sent to a message queue.</li>
+</ol>
+<h3 id="what-if">What if?</h3>
+<p>What if our processing looks like this:</p>
+<pre><code class="python">for word in extract_words():
+    process_word(word)
+</code></pre>
+
+<p>Even better:</p>
+<pre><code class="python">db_processor = word_process.get_database_processor()
+extractor = word_extract.get()
+reader.when_new_word(processor.process)
+</code></pre>
+
+<h2 id="solution">Solution</h2>
+<p>Let's start with the original requirements. Can we make the code more readable</p></div>
             </div>
         </div>
 
@@ -118,11 +174,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = "../..",
+            var base_url = "../../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="../../js/base.js" defer></script>
-        <script src="../../search/main.js" defer></script>
+        <script src="../../../js/base.js" defer></script>
+        <script src="../../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
