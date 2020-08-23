@@ -7,15 +7,15 @@
         
         
         
-        <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>Kata - Gems</title>
-        <link href="../../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="shortcut icon" href="../../../../img/favicon.ico">
+        <title>Pipe and Filter in Python - Gems</title>
+        <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
 
-        <script src="../../js/jquery-1.10.2.min.js" defer></script>
-        <script src="../../js/bootstrap.min.js" defer></script>
+        <script src="../../../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../../../js/bootstrap.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
@@ -23,7 +23,7 @@
     <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="../..">Gems</a>
+                <a class="navbar-brand" href="../../../..">Gems</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
@@ -34,31 +34,31 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="navitem">
-                                <a href="../.." class="nav-link">Home</a>
+                                <a href="../../../.." class="nav-link">Home</a>
                             </li>
-                            <li class="dropdown active">
+                            <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Python <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
+    <a href="../../../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
 </li>
                                     
 <li>
-    <a href="./" class="dropdown-item active">Kata</a>
+    <a href="../../" class="dropdown-item">Kata</a>
 </li>
                                     
 <li>
-    <a href="../tricks/" class="dropdown-item">Tricks</a>
+    <a href="../../../tricks/" class="dropdown-item">Tricks</a>
 </li>
                                     
 <li>
-    <a href="../misc/" class="dropdown-item">Misc Python Topics</a>
+    <a href="../../../misc/" class="dropdown-item">Misc Python Topics</a>
 </li>
                                 </ul>
                             </li>
                             <li class="navitem">
-                                <a href="../../blog/" class="nav-link">Blog</a>
+                                <a href="../../../../blog/" class="nav-link">Blog</a>
                             </li>
                         </ul>
 
@@ -68,16 +68,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../tdd/" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" href="../tricks/" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -96,7 +86,7 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#python-kata" class="nav-link">Python Kata</a>
+            <li class="nav-item" data-level="1"><a href="#pipe-and-filter-in-python" class="nav-link">Pipe and Filter in Python</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -105,12 +95,39 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="python-kata">Python Kata</h1>
+<h1 id="pipe-and-filter-in-python">Pipe and Filter in Python</h1>
+<p>The Pipe and Filter is a very popular architecture style. It can be found in may software development frameworks, like Spark, JavaScript, etc. Linux command line shell also supports piping. You can run one command and direct the output of that command to another command. The output of the second command can be directed to a third command and so on and so forth.</p>
+<p>We want to have something similar in Python - piping or chaining together series of transformations on a sequence. Transformations are applied with following patterns:</p>
 <ul>
-<li>Kata #1: <a href="python-kata-pipe-and-filter/">Pipe and Filter in Python</a></li>
-<li>Kata #2: <a href="python-kata-galaxy-empire-salaries/">The Galaxy Empire salaries</a></li>
-<li>Kata #3: <a href="python-kata-world-population/">World population</a></li>
-</ul></div>
+<li><code>map</code> - takes as an argument a transformation. When the pipeline is executed, the transformation is applied to each element from the  input and is placed in the output.</li>
+<li><code>flat_map</code> - takes as an argument a transformation. The transformation is expected to produce iterable. When the pipeline is executed, the transformation is applied to each element from the input, each element from the resulting iterable is placed into the output pipeline.</li>
+</ul>
+<p>Here is an example what it might look like using the implementation.</p>
+<p><strong>Example:</strong></p>
+<ul>
+<li>Input: a list of integers [4,6,9]</li>
+<li>Transformation 1: divide each integer by 2 and convert to integer</li>
+<li>Transformation 2: convert each item into a sequence, e.g. 1 becomes [1], 2 becomes [2, 2], 3 becomes [3,3,3], etc. Flatten the result.</li>
+</ul>
+<p><em>Python code:</em></p>
+<pre><code class="python">pipe = (Pipe([4,6,9])
+        .map(lambda x: x/2)
+        .flat_map(lambda x: str(x)*int(x)))
+for item in pipe:
+    print(item)
+</code></pre>
+
+<p><em>Output:</em></p>
+<pre><code>2
+2
+3
+3
+3
+4
+4
+4
+4
+</code></pre></div>
             </div>
         </div>
 
@@ -119,11 +136,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = "../..",
+            var base_url = "../../../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="../../js/base.js" defer></script>
-        <script src="../../search/main.js" defer></script>
+        <script src="../../../../js/base.js" defer></script>
+        <script src="../../../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
