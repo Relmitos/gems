@@ -176,44 +176,11 @@
 
 <p>The solution is in the decorator pattern. We start with a collection wrapped into a decorator <code>Pipe</code>. Than we apply a transformation which returns another <code>Pipe</code> decorator which bundles also the transformation. And we continue until we get all the processing we need defined.</p>
 <p>Here is the source for the <code>Pipe</code> class:</p>
-<pre><code class="python">import itertools
-
-class Pipe:
-    def __init__(self, seq):
-        self._seq = seq
-
-    def __iter__(self):
-        return iter(self._seq)
-
-    def map(self, func):
-        return Pipe(map(func, self))
-
-    def flat_map(self, func=None):
-        maped_iter = self if func is None else map(func, self)
-        return Pipe(itertools.chain.from_iterable(maped_iter))
-
-    def filter(self, func=None):
-        return Pipe(filter(func, self))
-
-    def before(self, func):
-        return Pipe(before_it(func, self))
-
-    def after(self, func):
-        return Pipe(after_it(func, self))
-
-def before_it(func, iter1):
-    for it in iter1:
-        func()
-        yield it
-
-def after_it(func, iter1):
-    for it in iter1:
-        yield it
-        func()
-</code></pre>
+<script src="https://gist.github.com/ivangeorgiev/a6b3d6dc458391a38e693af7aba7a99c.js"></script>
 
 <p>In the implementation there is one addition - the <code>before</code>  method which calls a function before the next item from the collection is returned. The same effect could be achieved using <code>map</code>, but I added it for symmetry with <code>after</code> method and as syntactic sugar.</p>
-<p>Think about following. Using the Pipe approach, can you make the solution configuration driven? Can you turn on or off stages, using feature flags?</p></div>
+<p>Think about following. Using the Pipe approach, can you make the solution configuration driven? Can you turn on or off stages, using feature flags?</p>
+<script src="https://gist.github.com/ivangeorgiev/a6b3d6dc458391a38e693af7aba7a99c.js"></script></div>
             </div>
         </div>
 
