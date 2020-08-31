@@ -115,8 +115,9 @@
 <p>You need to decode and validate JWT Token issued by Azure Active Directory.</p>
 <p>Example scenario is where you have a Web Application which is using BFF (Backend for Frontend) API. Users are authenticated by the front-end application using Azure AD and the token is forwarded to the BFF API. The BFF API needs to validate the received token since the client is outside of its trust boundary.</p>
 <h2 id="solution">Solution</h2>
-<p>I have created a small package to help with getting the Azure Active Directory public key and decode the token using the <em>pyjwt</em> library.</p>
-<p>All the sources are available in <a href="https://github.com/ivangeorgiev/gems/tree/master/src/python-azure-ad-token-validate">GitHub</a>. Here is an example how to use it:</p>
+<p>Use <em>pyjwt</em> and <code>cryptography</code> packages.</p>
+<p>I have created a small package <code>aadtoken</code> to help with getting the Azure Active Directory public key and decode the token using, using <code>pyjwt</code> and <code>cryptography</code>. Further to decode the token use the <code>jwt.decode</code> function from the <code>pyjwat</code> package.</p>
+<p>All the sources are available in <a href="https://github.com/ivangeorgiev/gems/tree/master/src/python-azure-ad-token-validate">GitHub</a>. Here I am providing only an example how to use the <code>aadtoken</code> helper package along with <code>jwt.decode</code>:</p>
 <pre><code class="python">import os
 import sys
 import jwt
