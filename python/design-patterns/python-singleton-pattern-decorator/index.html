@@ -8,7 +8,7 @@
         
         
         <link rel="shortcut icon" href="../../../img/favicon.ico">
-        <title>Python Kata #2: The Galaxy Empire Salaries - Gems</title>
+        <title>Convert a Python class to Singleton using decorator - Gems</title>
         <link href="../../../css/bootstrap.min.css" rel="stylesheet">
         <link href="../../../css/font-awesome.min.css" rel="stylesheet">
         <link href="../../../css/base.css" rel="stylesheet">
@@ -41,7 +41,7 @@
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../../design-patterns/" class="dropdown-item">Design Patterns</a>
+    <a href="../" class="dropdown-item">Design Patterns</a>
 </li>
                                     
 <li>
@@ -49,7 +49,7 @@
 </li>
                                     
 <li>
-    <a href="../" class="dropdown-item">Kata</a>
+    <a href="../../kata/" class="dropdown-item">Kata</a>
 </li>
                                     
 <li>
@@ -90,8 +90,28 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#python-kata-2-the-galaxy-empire-salaries" class="nav-link">Python Kata #2: The Galaxy Empire Salaries</a>
+            <li class="nav-item" data-level="1"><a href="#convert-a-python-class-to-singleton-using-decorator" class="nav-link">Convert a Python class to Singleton using decorator</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#python-singleton-decorator" class="nav-link">Python Singleton Decorator</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#try-it-out" class="nav-link">Try it out</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#how-the-singleton-decorator-works" class="nav-link">How the singleton decorator works?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#discussion" class="nav-link">Discussion</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#further-reading" class="nav-link">Further Reading</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -99,8 +119,64 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="python-kata-2-the-galaxy-empire-salaries">Python Kata #2: The Galaxy Empire Salaries</h1>
-<p>You are given the information about the salaries of all the employees in the Galaxy Empire. The information is a dataset in CSV format with header row. How would you compute the average, the count, and the minimum and the maximum values for the <em>salary</em> column?</p></div>
+<h1 id="convert-a-python-class-to-singleton-using-decorator">Convert a Python class to Singleton using decorator</h1>
+<p>In Python there are many ways to implement the <a href="https://en.wikipedia.org/wiki/Singleton_pattern">Singleton Pattern</a>. For example:</p>
+<ul>
+<li>Modules are singletons in Python.</li>
+<li>You could use java-like implementation, combined with factory method. </li>
+</ul>
+<p>There is another interesting pythonic way to turn any class into a singleton. You could use a Python decorator and apply it to the class you want to be a singleton.</p>
+<h2 id="python-singleton-decorator">Python Singleton Decorator</h2>
+<p>The decorator is changing the way new objects are created from the decorated class. Each time you are requesting a new object, you will get the same object again and again.</p>
+<p>Here is the definition of the singleton decorator:</p>
+<pre><code class="python">from functools import wraps
+
+def singleton(orig_cls):
+    orig_new = orig_cls.__new__
+    instance = None
+
+    @wraps(orig_cls.__new__)
+    def __new__(cls, *args, **kwargs):
+        nonlocal instance
+        if instance is None:
+            instance = orig_new(cls, *args, **kwargs)
+        return instance
+    orig_cls.__new__ = __new__
+    return orig_cls
+</code></pre>
+
+<p>Here is an example usage:</p>
+<pre><code class="python">@singleton
+class Logger:
+    def log(msg):
+        print(msg)
+
+logger1 = Logger()
+logger2 = Logger()
+assert logger1 is logger2
+</code></pre>
+
+<p>In this example we have a simple <code>Logger</code> class with a single method <code>log</code> which logs a message. For simplicity our implementation is just printing the message to the standard output.</p>
+<p>We are creating two <code>Logger</code>  objects - <code>logger1</code> and <code>logger2</code>  we verify that the two variables are actually referring to the same object, using the <code>assert</code> statement.</p>
+<h2 id="try-it-out">Try it out</h2>
+<p>Here is a Jupyter notebook you can use to try the above example.</p>
+<script src="https://gist.github.com/ivangeorgiev/d4bd94bc69f14fe35324f4855a4db9f1.js"></script>
+
+<h2 id="how-the-singleton-decorator-works">How the singleton decorator works?</h2>
+<p>This solution is based on the way Python creates new instances of a class. When a new instance is to be created, the special method of the class, called <code>__new__</code>, is called to create the instance. The method should return the newly created instance. In this solution the decorator is overwriting the original <code>__new__</code> method of the class so that it will return same instance each time it is called.</p>
+<p>When you add a decorator to a class, the decorator function is called once, receiving as a first argument the decorated class. The decorator stores a reference to the original <code>__new__</code> method of the decorated class into a variable named<code>orig_new</code>, the original <code>__new__</code> method is replaced with different implementation.</p>
+<p>The new implementation of the <code>__new__</code> method is checking if an instance of the class has already been created. If this is the first call to the function the <code>instance</code> variable is not set. The original method referenced by the <code>orig_new</code> variable is called to create the initial instance of the class. The object is stored in in the <code>instance</code> variable and is returned as a result from the function.</p>
+<p>Further calls to the function will not create new instances, but will directly return the initial instance, stored in the <code>instance</code> variable.</p>
+<h2 id="discussion">Discussion</h2>
+<p>A little bit more advanced implementation of the Singleton pattern would be to have named object instances. For example, you might want to have different loggers. For example:</p>
+<ul>
+<li><code>Logger('database')</code> returns an instance for logging database messages.</li>
+<li><code>Logger('http')</code> returns an instance for logging HTTP requests.</li>
+</ul>
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li>You can learn more about the way the <code>__new__</code> method works in the <a href="https://docs.python.org/3/reference/datamodel.html#object.__new__">Python documentation</a>.</li>
+</ul></div>
             </div>
         </div>
 
