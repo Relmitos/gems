@@ -7,15 +7,15 @@
         
         
         
-        <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>Kata - Gems</title>
-        <link href="../../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Python Kata #4: Hello Mars! - Gems</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
 
-        <script src="../../js/jquery-1.10.2.min.js" defer></script>
-        <script src="../../js/bootstrap.min.js" defer></script>
+        <script src="../../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../../js/bootstrap.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
@@ -23,7 +23,7 @@
     <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="../..">Gems</a>
+                <a class="navbar-brand" href="../../..">Gems</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
@@ -34,35 +34,35 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="navitem">
-                                <a href="../.." class="nav-link">Home</a>
+                                <a href="../../.." class="nav-link">Home</a>
                             </li>
-                            <li class="dropdown active">
+                            <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Python <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../design-patterns/" class="dropdown-item">Design Patterns</a>
+    <a href="../../design-patterns/" class="dropdown-item">Design Patterns</a>
 </li>
                                     
 <li>
-    <a href="../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
+    <a href="../../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
 </li>
                                     
 <li>
-    <a href="./" class="dropdown-item active">Kata</a>
+    <a href="../" class="dropdown-item">Kata</a>
 </li>
                                     
 <li>
-    <a href="../tricks/" class="dropdown-item">Tricks</a>
+    <a href="../../tricks/" class="dropdown-item">Tricks</a>
 </li>
                                     
 <li>
-    <a href="../misc/" class="dropdown-item">Misc Python Topics</a>
+    <a href="../../misc/" class="dropdown-item">Misc Python Topics</a>
 </li>
                                 </ul>
                             </li>
                             <li class="navitem">
-                                <a href="../../blog/" class="nav-link">Blog</a>
+                                <a href="../../../blog/" class="nav-link">Blog</a>
                             </li>
                         </ul>
 
@@ -72,16 +72,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../tdd/" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" href="../tricks/" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -100,7 +90,7 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#python-kata" class="nav-link">Python Kata</a>
+            <li class="nav-item" data-level="1"><a href="#python-kata-4-hello-mars" class="nav-link">Python Kata #4: Hello Mars!</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -109,13 +99,62 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="python-kata">Python Kata</h1>
-<ul>
-<li>Kata #1: <a href="python-kata-pipe-and-filter/">Pipe and Filter in Python</a></li>
-<li>Kata #2: <a href="python-kata-galaxy-empire-salaries/">The Galaxy Empire salaries</a></li>
-<li>Kata #3: <a href="python-kata-world-population/">World population</a></li>
-<li>Kata #4: <a href="python-kata-hello-mars/">Hello Mars!</a></li>
-</ul></div>
+<h1 id="python-kata-4-hello-mars">Python Kata #4: Hello Mars!</h1>
+<p>Me and my friends like to travel to other planets. To keep track on which planets we visited I created a Python <code>VisitTracker</code> class. </p>
+<pre><code class="python">class VisitTracker:
+  visited = []
+
+  def __init__(self, name):
+    self.name = name
+
+  def visit(self, place):
+    if place not in self.visited:
+      self.visited.append(place)
+
+  def list(self):
+    print(&quot;====== &quot; + self.name + &quot;'s visits ======&quot;)
+    print(self.visited)
+</code></pre>
+
+<p>I put all the Python source code in an Jupyter Notebook (I made it available for you as <a href="https://gist.github.com/ivangeorgiev/693b45b78b37921191381a9f880a9ebc">GitHub gist</a>) and started using it. Added recent planetary visits John and Jane made:</p>
+<ol>
+<li>John visited Saturn together with Jane</li>
+<li>John visited Mars</li>
+<li>Jane visited Jupiter</li>
+</ol>
+<p>Here is how I tracked this:</p>
+<pre><code class="python">johns_visits = VisitTracker('John')
+janes_visits = VisitTracker('Jane')
+
+#1 John visited Saturn together with Jane
+johns_visits.visit('Saturn')
+janes_visits.visit('Saturn')
+
+#2 John visited Mars
+johns_visits.visit('Mars')
+johns_visits.list()
+
+#3 Jane visited Jupiter
+janes_visits.visit('Jupiter')
+janes_visits.list()
+</code></pre>
+
+<p>And the output was not quite what I was expecting:</p>
+<pre><code>====== John's visits ======
+['Saturn', 'Mars']
+====== Jane's visits ======
+['Saturn', 'Mars', 'Jupiter']
+</code></pre>
+
+<p>I was expecting:</p>
+<pre><code>====== John's visits ======
+['Saturn', 'Mars']
+====== Jane's visits ======
+['Saturn', 'Jupiter']
+</code></pre>
+
+<p>If you do not believe me - check the Jupyter Notebook with the Python code and the results in <a href="https://colab.research.google.com/gist/ivangeorgiev/693b45b78b37921191381a9f880a9ebc/hello-mars.ipynb">Colab</a>.</p>
+<p>What went wrong?</p></div>
             </div>
         </div>
 
@@ -124,11 +163,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = "../..",
+            var base_url = "../../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="../../js/base.js" defer></script>
-        <script src="../../search/main.js" defer></script>
+        <script src="../../../js/base.js" defer></script>
+        <script src="../../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
