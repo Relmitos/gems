@@ -4,26 +4,26 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
         
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>Gems</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Document REST APIs based on Python Django's Rest Framework Function Views - Gems</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
 
-        <script src="js/jquery-1.10.2.min.js" defer></script>
-        <script src="js/bootstrap.min.js" defer></script>
+        <script src="../../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../../js/bootstrap.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
 
-    <body class="homepage">
+    <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href=".">Gems</a>
+                <a class="navbar-brand" href="../../..">Gems</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
@@ -33,31 +33,31 @@
                 <div id="navbar-collapse" class="navbar-collapse collapse">
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
-                            <li class="navitem active">
-                                <a href="." class="nav-link">Home</a>
+                            <li class="navitem">
+                                <a href="../../.." class="nav-link">Home</a>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Python <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="python/design-patterns/" class="dropdown-item">Design Patterns</a>
+    <a href="../../design-patterns/" class="dropdown-item">Design Patterns</a>
 </li>
                                     
 <li>
-    <a href="python/tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
+    <a href="../../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
 </li>
                                     
 <li>
-    <a href="python/kata/" class="dropdown-item">Kata</a>
+    <a href="../../kata/" class="dropdown-item">Kata</a>
 </li>
                                     
 <li>
-    <a href="python/tricks/" class="dropdown-item">Tricks</a>
+    <a href="../../tricks/" class="dropdown-item">Tricks</a>
 </li>
                                     
 <li>
-    <a href="python/misc/" class="dropdown-item">Misc Python Topics</a>
+    <a href="../" class="dropdown-item">Misc Python Topics</a>
 </li>
                                 </ul>
                             </li>
@@ -66,12 +66,12 @@
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="sqlserver/" class="dropdown-item">SQL Server</a>
+    <a href="../../../sqlserver/" class="dropdown-item">SQL Server</a>
 </li>
                                 </ul>
                             </li>
                             <li class="navitem">
-                                <a href="blog/" class="nav-link">Blog</a>
+                                <a href="../../../blog/" class="nav-link">Blog</a>
                             </li>
                         </ul>
 
@@ -81,16 +81,6 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li class="nav-item">
-                                <a rel="prev" class="nav-link disabled">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" href="python/design-patterns/" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
                     </ul>
                 </div>
             </div>
@@ -109,9 +99,13 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#welcome-to-my-gems" class="nav-link">Welcome to my Gems</a>
+            <li class="nav-item" data-level="1"><a href="#document-rest-apis-based-on-python-djangos-rest-framework-function-views" class="nav-link">Document REST APIs based on Python Django's Rest Framework Function Views</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#latest-publications" class="nav-link">Latest Publications</a>
+            <li class="nav-item" data-level="2"><a href="#custom-autoschema-class" class="nav-link">Custom AutoSchema class</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#reference" class="nav-link">Reference</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -122,69 +116,91 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="welcome-to-my-gems">Welcome to my Gems</h1>
-<h2 id="latest-publications">Latest Publications</h2>
+<h1 id="document-rest-apis-based-on-python-djangos-rest-framework-function-views">Document REST APIs based on Python Django's Rest Framework Function Views</h1>
+<p>When using object-oriented implementation for your REST API, most of the documentation can be generated automatically from serializers and models you have created.</p>
+<p>When using function based views, you have almost no flexibility for creating OpenAPI documentation for your REST API.</p>
+<p>The typical signature for a view function is:</p>
+<pre><code class="python">from rest_framework.decorators import api_view
+
+@api_view(['GET', 'POST'])
+def hello_world(request):
+    '''
+    get: get greeting
+    post: post a greeting
+    '''
+    return Response({&quot;message&quot;: &quot;Hello, world!&quot;})
+</code></pre>
+
+<p>The <code>@api_view</code> decorator wraps your view function into an <code>APIView</code> subclass. You can define description for all the methods, supported by the function in the function's docstring. This is practically all the supported documentation.</p>
+<p>Fortunately Django Rest Framework provides an extension point through the <code>@schema</code>  decorator. I have created a quick and easy solution for OpenAPI generation, based on the <code>@schema</code> decorator. </p>
+<h2 id="custom-autoschema-class">Custom AutoSchema class</h2>
+<p>The solution parses the view function docstring and uses it in the process of the automatic documentation generation. </p>
+<p>The following <code>AutoDocstringSchema</code> class parses the yaml from the view docstring and returns the operations and components defined.  To build the documentation, the <code>AutoSchema</code> methods are invoked first and the result is combined with the documentation from the docstring.</p>
+<p>If the docstring fails to parse as yaml, it is ignored.</p>
+<pre><code class="python">class AutoDocstringSchema(AutoSchema):
+
+    @property
+    def documentation(self):
+        if not hasattr(self, '_documentation'):
+            try:
+                self._documentation = yaml.safe_load(self.view.__doc__)
+            except yaml.scanner.ScannerError:
+                self._documentation = {}
+        return self._documentation
+
+    def get_components(self, path, method):
+        components = super().get_components(path, method)
+        doc_components = self.documentation.get('components', {})
+        components.update(doc_components)
+        return components
+
+    def get_operation(self, path, method):
+        operation = super().get_operation( path, method)
+        doc_operation = self.documentation.get(method.lower(), {})
+        operation.update(doc_operation)
+        return operation
+</code></pre>
+
+<p>An example of the yaml documentation:</p>
+<pre><code class="python">@api_view(['GET'])
+@schema(AutoDocstringSchema())
+def list_todos(request):
+    '''
+    get:
+      description: List todo items, stored in the database.
+      summary: List todo items
+    '''
+    # ...
+
+@api_view(['GET'])
+@schema(AutoDocstringSchema())
+def get_todo_item(request, id):
+    '''
+    get:
+      description: Retrieve a todo item definition
+      summary: Retrieve todo item
+      parameters:
+         - name: id
+           in: path
+           description: ToDo item ID
+           schema:
+              type: string
+      responses:
+         '200':
+            description: Todo item successfully retrieved
+            content:
+               'application/json': {}
+    '''
+    # ...
+</code></pre>
+
+<p>Multiple request methods are supported. You can have a view function whish supports GET, POST, etc. requests at the same time. To document any of them, you define corresponding documentation, using lowercase method name.</p>
+<p>You can also add definitions for components. If your docstring has <code>components</code> section, the components defined in this section will be added to the API components.</p>
+<h2 id="reference">Reference</h2>
 <ul>
-<li>
-<p><a href="python/misc/python-django-rest-framework-openapi-documentation/">Document REST APIs based on Python Django's Rest Framework</a>
-  <em>on October 12<sup>th</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/misc/">Misc Topics</a></em></p>
-</li>
-<li>
-<p><a href="sqlserver/sql-server-list-find-roles-assigned-user-principalblocking-locks/">List roles assigned to a principal / user in SQL Server (MSSQL) Database</a> recipe 
-  <em>on September 12<sup>th</sup>, 2020, in <a href="sqlserver/">Sql Server</a></em></p>
-</li>
-<li>
-<p><a href="sqlserver/sql-server-list-blocking-locks/">List Blocking Locks in SQL Server</a> recipe 
-  <em>on September 12<sup>th</sup>, 2020, in <a href="sqlserver/">Sql Server</a></em></p>
-</li>
-<li>
-<p><a href="python/kata/python-kata-hello-mars/">Python Kata #4: Hello Mars!</a> 
-  <em>on September 3<sup>rd</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/kata/">Kata</a></em></p>
-</li>
-<li>
-<p><a href="python/design-patterns/python-singleton-pattern-decorator/">Convert a Python class to Singleton using decorator</a> 
-  <em>on September 2<sup>nd</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/design-patterns/">Design Patterns</a></em></p>
-</li>
-<li>
-<p><a href="python/misc/python-azure-ad-token-decode-validate/">Decode and Validate Azure Active Directory Token in Python</a>
-  <em>on August 31<sup>st</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/misc/">Misc Topics</a></em></p>
-</li>
-<li>
-<p><a href="blog/2020-08-25-python-django-streaming-response/">Example on streaming response from Python Django</a>
-  <em>on August 25<sup>th</sup>, 2020, in <a href="blog/">Blog</a></em></p>
-</li>
-<li>
-<p><a href="blog/2020-08-24-chain-it-python-data-pipeline/">Chain it! Or data pipelining with Python</a>
-  <em>on August 24<sup>th</sup>, 2020, in <a href="blog/">Blog</a></em></p>
-</li>
-<li>
-<p><a href="python/kata/python-kata-world-population/">Python Kata #3: World population</a>
-  <em>on August 23<sup>rd</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/kata/">Kata</a></em></p>
-</li>
-<li>
-<p><a href="python/kata/python-kata-galaxy-empire-salaries/">Python Kata #2: The Galaxy Empire salaries</a>
-  <em>on August 23<sup>rd</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/kata/">Kata</a></em></p>
-</li>
-<li>
-<p><a href="python/kata/python-kata-pipe-and-filter/">Python Kata #1: Pipe and Filter</a>
-  <em>on August 22<sup>th</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/kata/">Kata</a></em></p>
-</li>
-<li>
-<p><a href="python/tricks/python-trick-unpack-a-sequence-into-variables/">Unpacking a Python sequence into variables</a>
-  <em>on August 19<sup>th</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/tricks/">Tricks</a></em></p>
-</li>
-<li>
-<p><a href="python/misc/python-pyodbc-truncate-table/">Truncate table with pyodbc</a>
-  <em>on August 17<sup>th</sup>, 2020, in <a href="python/">Python</a> :: <a href="python/misc/">Misc Topics</a></em></p>
-</li>
-<li>
-<p><a href="python/tdd/python-unittest-assert-custom-objects-are-equal/">Assert custom objects are equal in Python unit test</a>
-  <em>on August 15th, 2020, in <a href="python/">Python</a> :: <a href="python/tdd/">Test Driven Development</a></em></p>
-</li>
-<li>
-<p><a href="python/tdd/python-unittest-database-applications/">Unit testing for Python database applications</a>
-  <em>on August 14th, 2020, in <a href="python/">Python</a> :: <a href="python/tdd/">Test Driven Development</a></em></p>
-</li>
+<li>Django Rest Framework - <a href="https://www.django-rest-framework.org/api-guide/schemas">Schema</a></li>
+<li>Django Rest Framework - <a href="https://www.django-rest-framework.org/topics/documenting-your-api/">Document your API</a></li>
+<li><a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md">OpenAPI Specification v.3.0.2</a></li>
 </ul></div>
             </div>
         </div>
@@ -194,11 +210,11 @@
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = ".",
+            var base_url = "../../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="js/base.js" defer></script>
-        <script src="search/main.js" defer></script>
+        <script src="../../../js/base.js" defer></script>
+        <script src="../../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -266,8 +282,3 @@
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.1.2
-Build Date UTC : 2020-10-12 11:40:28.138665+00:00
--->
