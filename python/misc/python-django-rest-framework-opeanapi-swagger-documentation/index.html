@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Add OpeanAPI documentation and SwaggerUI to your Django Rest Framework project - Gems</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+        <script src="../../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">Gems</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href="../../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Python <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../design-patterns/" class="dropdown-item">Design Patterns</a>
+</li>
+                                    
+<li>
+    <a href="../../tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
+</li>
+                                    
+<li>
+    <a href="../../kata/" class="dropdown-item">Kata</a>
+</li>
+                                    
+<li>
+    <a href="../../tricks/" class="dropdown-item">Tricks</a>
+</li>
+                                    
+<li>
+    <a href="../" class="dropdown-item">Misc Python Topics</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Other <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../../sqlserver/" class="dropdown-item">SQL Server</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="navitem">
+                                <a href="../../../blog/" class="nav-link">Blog</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#add-opeanapi-documentation-and-swaggerui-to-your-django-rest-framework-project" class="nav-link">Add OpeanAPI documentation and SwaggerUI to your Django Rest Framework project</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#step-1-create-documentation-application" class="nav-link">Step 1: Create documentation application</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#step-2-register-documentation-endpoints" class="nav-link">Step 2. Register documentation endpoints</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#step-3-create-the-swagger-ui-template" class="nav-link">Step 3. Create the Swagger UI template</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#step-4-register-the-api_docs-application-with-the-django-project" class="nav-link">Step 4. Register the api_docs application with the Django project</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#step-5-add-documentation-urls-to-django-project-urls" class="nav-link">Step 5. Add documentation URLs to Django project urls</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="add-opeanapi-documentation-and-swaggerui-to-your-django-rest-framework-project">Add OpeanAPI documentation and SwaggerUI to your Django Rest Framework project</h1>
+<p>Here is step-by-step recipe on how to add auto generated documentation for your REST API in OpenAPI format and enable SwaggerUI. The recipe is based on <a href="https://www.django-rest-framework.org/topics/documenting-your-api/">Document your API</a> tutorial from Django Rest Framework.</p>
+<h2 id="step-1-create-documentation-application">Step 1: Create documentation application</h2>
+<pre><code class="bash">python manage.py startapp docs
+</code></pre>
+
+<h2 id="step-2-register-documentation-endpoints">Step 2. Register documentation endpoints</h2>
+<p>Create <code>urls.py</code> in the <code>api_docs</code> application:</p>
+<pre><code class="python">from django.urls import path
+from django.views.generic import TemplateView
+from rest_framework.schemas import get_schema_view
+from rest_framework import renderers
+
+urlpatterns = [
+    path('docs/', TemplateView.as_view(
+        template_name='swagger-ui.html',
+        extra_context={'schema_url':'openapi-schema-yaml'}
+    ), name='swagger-ui'),
+    path('openapi.yaml', get_schema_view(
+            title=&quot;Best API Service&quot;,
+            renderer_classes=[renderers.OpenAPIRenderer]
+        ), name='openapi-schema-yaml'),
+    path('openapi.json', get_schema_view(
+            title=&quot;Best API Service&quot;,
+            renderer_classes = [renderers.JSONOpenAPIRenderer], 
+        ), name='openapi-schema-json'),
+]
+</code></pre>
+
+<p>This will register three endpoints:</p>
+<ul>
+<li><code>/openapi.json</code> - OpenAPI documentation in JSON format</li>
+<li><code>/openapi.yaml</code> - OpenAPI documentation in YAML format</li>
+<li><code>/docs</code> - Swagger UI, based on the <code>openapi.yaml</code></li>
+</ul>
+<h2 id="step-3-create-the-swagger-ui-template">Step 3. Create the Swagger UI template</h2>
+<p>Create a <code>swagger-ui.html</code> file in the <code>api_docs</code> application's <em>templates</em> directory:</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Swagger&lt;/title&gt;
+    &lt;meta charset=&quot;utf-8&quot;/&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;//unpkg.com/swagger-ui-dist@3/swagger-ui.css&quot; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;swagger-ui&quot;&gt;&lt;/div&gt;
+    &lt;script src=&quot;//unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+    const ui = SwaggerUIBundle({
+        url: &quot;{% url schema_url %}&quot;,
+        dom_id: '#swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+        layout: &quot;BaseLayout&quot;,
+        requestInterceptor: (request) =&gt; {
+          request.headers['X-CSRFToken'] = &quot;{{ csrf_token }}&quot;
+          return request;
+        }
+      })
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="step-4-register-the-api_docs-application-with-the-django-project">Step 4. Register the <code>api_docs</code> application with the Django project</h2>
+<p>To register the  <code>api_docs</code> application in the Django project you need to modify the project's <code>settings.py</code>:</p>
+<pre><code class="python">INSTALLED_APPS = [
+    # ...
+    'rest_framework',
+    'docs',
+    # ...
+]
+
+</code></pre>
+
+<h2 id="step-5-add-documentation-urls-to-django-project-urls">Step 5. Add documentation URLs to Django project <code>urls</code></h2>
+<p>Modify the <code>urls.py</code> file for your Django project. Make sure in contains <code>include('api_docs.urls')</code>:</p>
+<pre><code class="python">from django.urls import path, include
+
+urlpatterns = [
+    # ...
+    path('', include('api_docs.urls')),
+    # ...
+]
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js" defer></script>
+        <script src="../../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
