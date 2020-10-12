@@ -137,8 +137,9 @@ def hello_world(request):
 <p>The solution parses the view function docstring and uses it in the process of the automatic documentation generation. </p>
 <p>The following <code>AutoDocstringSchema</code> class parses the yaml from the view docstring and returns the operations and components defined.  To build the documentation, the <code>AutoSchema</code> methods are invoked first and the result is combined with the documentation from the docstring.</p>
 <p>If the docstring fails to parse as yaml, it is ignored.</p>
-<pre><code class="python">class AutoDocstringSchema(AutoSchema):
+<pre><code class="python">from rest_framework.schemas.openapi import AutoSchema
 
+class AutoDocstringSchema(AutoSchema):
     @property
     def documentation(self):
         if not hasattr(self, '_documentation'):
@@ -162,7 +163,9 @@ def hello_world(request):
 </code></pre>
 
 <p>Here is an example of function views, documented using yaml docstring:</p>
-<pre><code class="python">@api_view(['GET'])
+<pre><code class="python">from rest_framework.decorators import api_view, schema
+
+@api_view(['GET'])
 @schema(AutoDocstringSchema())
 def list_todos(request):
     '''
