@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Define Environment Variables for Databricks Cluster - Gems</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">Gems</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Python <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../python/design-patterns/" class="dropdown-item">Design Patterns</a>
+</li>
+                                    
+<li>
+    <a href="../../python/tdd/" class="dropdown-item">Test Driven Development (TDD)</a>
+</li>
+                                    
+<li>
+    <a href="../../python/kata/" class="dropdown-item">Kata</a>
+</li>
+                                    
+<li>
+    <a href="../../python/tricks/" class="dropdown-item">Tricks</a>
+</li>
+                                    
+<li>
+    <a href="../../python/misc/" class="dropdown-item">Misc Python Topics</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Other <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../sqlserver/" class="dropdown-item">SQL Server</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="navitem">
+                                <a href="../../blog/" class="nav-link">Blog</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#define-environment-variables-for-databricks-cluster" class="nav-link">Define Environment Variables for Databricks Cluster</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#databrick-cli" class="nav-link">Databrick CLI</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#install-databricks-cli" class="nav-link">Install Databricks CLI</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#get-list-of-clusters" class="nav-link">Get list of clusters</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#get-cluster-information" class="nav-link">Get Cluster Information</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#putting-all-together" class="nav-link">Putting all Together</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="1"><a href="#conclusion" class="nav-link">Conclusion</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="define-environment-variables-for-databricks-cluster">Define Environment Variables for Databricks Cluster</h1>
+<p>You have Databricks instance and you need to be able to configure the environment variables for the Databricks cluster in automated way. For example from a CI/CD pipeline.</p>
+<h1 id="databrick-cli">Databrick CLI</h1>
+<p>Databricks CLI provides an interface to Databricks REST APIs. You can find more information on Databricks CLI <a href="https://docs.databricks.com/dev-tools/cli/index.html">documentation page</a>.</p>
+<p>Let's do some exploration.</p>
+<h2 id="install-databricks-cli">Install Databricks CLI</h2>
+<p>Databricks CLI is a Python package. It could be installed using <code>pip</code>:</p>
+<pre><code class="bash">pip install databaricks-cli
+</code></pre>
+
+<p>Databricks CLI can be configured in interactive mode. It will create a .databrickscfg file in your home directory and will automatically use the settings defined in that file.</p>
+<p>CI/CD pipeline executes commands in non-interactive mode. To  configure Databricks CLI for non-interactive mode, we have to define following environment variables:</p>
+<ul>
+<li><code>DATABRICKS_HOST</code></li>
+<li><code>DATABRICKS_TOKEN</code></li>
+</ul>
+<p>For example:</p>
+<pre><code class="powershell">$Env:DATABRICKS_HOST = 'https://adb-8513315150678991.11.azuredatabricks.net'
+$Env:DATABRICKS_TOKEN = 'dapi9971d00af58c157ee32f2250cd25dfac'
+</code></pre>
+
+<h2 id="get-list-of-clusters">Get list of clusters</h2>
+<p>To test our Databricks installation let's run a command to retrieve a list of clusters:</p>
+<pre><code class="powershell">datbricks clusters list
+</code></pre>
+
+<p>Produces output like the following:</p>
+<pre><code>1103-193230-glued638  MyCluster  RUNNING
+</code></pre>
+
+<p>To get more detailed list in JSON format, add the <code>--output JSON</code> option:</p>
+<pre><code class="bash">datbricks clusters list --output JSON
+</code></pre>
+
+<p>Produces output like the following:</p>
+<pre><code class="json">{
+  &quot;clusters&quot;: [
+    {
+      &quot;cluster_id&quot;: &quot;1103-193230-glued638&quot;,
+      &quot;cluster_name&quot;: &quot;MyCluster&quot;,
+      &quot;spark_version&quot;: &quot;7.3.x-scala2.12&quot;,
+      &quot;node_type_id&quot;: &quot;Standard_DS3_v2&quot;,
+      &quot;driver_node_type_id&quot;: &quot;Standard_DS3_v2&quot;,
+      &quot;spark_env_vars&quot;: {
+        &quot;PYSPARK_PYTHON&quot;: &quot;/databricks/python3/bin/python3&quot;
+      },
+      &quot;autotermination_minutes&quot;: 30,
+      &quot;enable_elastic_disk&quot;: true,
+      &quot;disk_spec&quot;: {},
+      &quot;cluster_source&quot;: &quot;UI&quot;,
+      &quot;enable_local_disk_encryption&quot;: false,
+      &quot;azure_attributes&quot;: {
+        &quot;first_on_demand&quot;: 1,
+        &quot;availability&quot;: &quot;ON_DEMAND_AZURE&quot;,
+        &quot;spot_bid_max_price&quot;: -1.0
+      },
+      &quot;state&quot;: &quot;PENDING&quot;,
+      &quot;state_message&quot;: &quot;Setting up 2 nodes.&quot;,
+      &quot;start_time&quot;: 1604431951029,
+      &quot;last_state_loss_time&quot;: 0,
+      &quot;num_workers&quot;: 1,
+      &quot;default_tags&quot;: {
+        &quot;Vendor&quot;: &quot;Databricks&quot;,
+        &quot;Creator&quot;: &quot;ivan.georgiev@gmail.com&quot;,
+        &quot;ClusterName&quot;: &quot;MyCluster&quot;,
+        &quot;ClusterId&quot;: &quot;1103-193230-glued638&quot;
+      },
+      &quot;creator_user_name&quot;: &quot;ivan.georgiev@gmail.com&quot;,
+      &quot;init_scripts_safe_mode&quot;: false
+    }
+  ]
+}
+</code></pre>
+
+<h2 id="get-cluster-information">Get Cluster Information</h2>
+<p>To retrieve the information for a single cluster:</p>
+<pre><code class="bash">databricks clusters get --cluster-id 1103-193230-glued638
+</code></pre>
+
+<p>The result of this command is cluster information in JSON format.</p>
+<h1 id="putting-all-together">Putting all Together</h1>
+<p>Now we can create a PowerShell function which will set all variables passed as <code>Vars</code> argument.</p>
+<p>The function will:</p>
+<ol>
+<li>Retrieve cluster information using <code>databricks cluster get</code></li>
+<li>Update the environment variable definitions</li>
+<li>Apply the cluster information using <code>databricks clusters edit</code></li>
+</ol>
+<p>Here is the definition of the function:</p>
+<pre><code class="powershell">function Set-DatabricksClusterEnvironmentVariables {
+    [cmdletbinding()]
+    param(
+        [string]$ClusterId,
+        [hashtable]$Vars
+    )
+
+    Write-Verbose &quot;Get Databricks cluster info&quot;
+    $ClusterInfo = (databricks clusters get --cluster-id $ClusterId | ConvertFrom-Json)
+    foreach ($VarName in $Vars.Keys) {
+        Write-Verbose &quot;Set variable $VarName&quot;
+        Add-Member -InputObject $ClusterInfo.spark_env_vars -Name $VarName -MemberType NoteProperty -Value $Vars[$VarName] -Force
+    }
+
+    $JsonFilePath = New-TemporaryFile
+
+    $ClusterInfoJson = ($ClusterInfo | ConvertTo-Json -Depth 10)
+    $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+    [System.IO.File]::WriteAllLines($JsonFilePath, $ClusterInfoJson, $Utf8NoBomEncoding)
+
+    Write-Verbose &quot;Update Databricks cluster&quot;
+    databricks clusters edit --json-file $JsonFilePath
+    Remove-Item $JsonFilePath
+}
+</code></pre>
+
+<p>Here is an example usage of this function:</p>
+<pre><code class="powershell">$Vars = @{
+    DB_CONNECTION_STRING = 'MSSQL;hostname=nowhere;username=ghost;password=purple'
+    ENVIRONMENT_NAME = 'Development'
+    ENVIRONMENT_CODE = 'dev'
+    SECRET_SCOPE = 'my_secrets'
+    }
+Set-DatabricksClusterEnvironmentVariables -ClusterId 1103-193230-glued638 -Vars $Vars -Verbose
+</code></pre>
+
+<p>It will define 4 environment variables:</p>
+<ul>
+<li><code>DB_CONNECTION_STRING</code></li>
+<li><code>ENVIRONMENT_NAME</code></li>
+<li><code>ENVIRONMENT_CODE</code></li>
+<li><code>SECRET_SCOPE</code></li>
+</ul>
+<p>I have also added the <code>-Verbose</code> parameter to get printed additional diagnostic information about the command execution.</p>
+<p>Here is the output:</p>
+<pre><code>VERBOSE: Get Databricks cluster info
+VERBOSE: Set variable ENVIRONMENT_CODE
+VERBOSE: Set variable DB_CONNECTION_STRING
+VERBOSE: Set variable ENVIRONMENT_NAME
+VERBOSE: Set variable SECRET_SCOPE
+VERBOSE: Update Databricks cluster
+</code></pre>
+
+<p>Checking in Databricks the environment variables are properly set:</p>
+<pre><code>PYSPARK_PYTHON=/databricks/python3/bin/python3
+SECRET_SCOPE=my_secrets
+ENVIRONMENT_CODE=dev
+NEW_VAR=SomeNewValue
+ENVIRONMENT_NAME=Development
+DB_CONNECTION_STRING=MSSQL;hostname=nowhere;username=ghost;password=purple
+</code></pre>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>We created a PowerShell function to script the process of updating the cluster environment variables, using Databricks CLI.  Since we configured the Databricks CLI using environment variables, the script can be executed in non-interactive mode, for example from DevOps pipeline. </p>
+<p>This method is very powerful. It can be used for other Databricks related tasks and activities. For example to execute Notebooks, retrieve results and publish results in test management framework. Do you want to learn how? I will tell you the story soon. Stay tuned.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
